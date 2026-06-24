@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.wiki-article {
+  height: 100vh;
+  overflow-y: auto;
+  padding: 1.5rem max(1rem, calc((100vw - 960px) / 2));
+  background: #fff;
+  color: #202122;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.mw-editsection {
+  display: none;
+}
+
+.wiki-article a {
+  color: #3366cc;
+}
+
+.wiki-article img {
+  max-width: 100%;
+  height: auto;
+}
