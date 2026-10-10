@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Wikipedia Fast Embed
 
-## Getting Started
+An experiment in fast navigation between English Wikipedia articles. The homepage opens `/wiki/Earth`; article links stay inside the app, with client-side caching and prefetching.
 
-First, run the development server:
+## What it does
+
+- Render Wikipedia article HTML at `/wiki/[title]`.
+- Rewrite internal Wikipedia links to local article routes.
+- Cache article HTML in memory and deduplicate in-flight requests.
+- Queue upstream requests with a 500 ms gap to reduce rate limiting.
+
+## Run locally
+
+Use Node.js 20.9+ and Bun.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/SpyC0der77/wikipedia-fast-embed.git
+cd wikipedia-fast-embed
+bun install --frozen-lockfile
+bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | Purpose |
+| --- | --- |
+| `bun run dev` | Start the development server |
+| `bun run build` | Build the production app |
+| `bun run start` | Serve a production build |
+| `bun run lint` | Run ESLint |
 
-## Learn More
+Run `build` before `start`.
 
-To learn more about Next.js, take a look at the following resources:
+## Dependencies and limitations
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Article content comes from the English Wikipedia REST API. The in-memory cache belongs to a server process and is lost when that process restarts. No API key is required. Wikipedia content retains its upstream licenses and attribution.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Source layout
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [`lib/wikipedia.ts`](lib/wikipedia.ts): Upstream requests, cache, and queue.
+- [`lib/wikipedia-utils.ts`](lib/wikipedia-utils.ts): Slug normalization and link rewriting.
+- [`components/wiki-article-view.tsx`](components/wiki-article-view.tsx): Article navigation.
+- [`app/api/wiki/route.ts`](app/api/wiki/route.ts): Prefetch endpoint.
